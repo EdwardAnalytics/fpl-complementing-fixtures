@@ -1,3 +1,4 @@
+import copy
 import os
 import json
 import pandas as pd
@@ -209,7 +210,7 @@ def blank_gameweek_calc(fix,fix_name):
             if str(j) not in fix_name[i]:
                 fix_name[i][str(j)] = 'BGW'
 
-    return fix, fix_name, bgw
+    return fix, fix_name, bgw, max_val
 
 
 # Identify multi gameweeks:
@@ -310,10 +311,10 @@ def fixture_calc(fix, start_gameweek, end_gameweek, mgw, exclude_gameweeks, skip
     fixture_pair = fixture_pair.drop_duplicates()
     fixture_pair = fixture_pair.sort_values('VALUE')
 
-    return fixture_pair
+    return fixture_pair, df
 
 
-def prep_fixture_output(fix):
+def prep_fixture_output_all(fix):
     for team in fix.keys():
         for gw in list(fix[team].keys())[::]:
             if len(gw.split('_')[0]) == 1:
@@ -322,11 +323,83 @@ def prep_fixture_output(fix):
     return fix
 
 
-def compare_fixtures(fix,team1,team2):
+def compare_fixtures_name(fix,team1,team2):
     comp = {key: {f'{team1}': fix[team1].get(key, '-'), f'{team2}': fix[team2].get(key, '-')} for key in
            sorted(set(list(fix[team1].keys()) + list(fix[team2].keys())))}
     comp = dict(sorted(comp.items(), key=lambda t: t[0]))
     return comp
+
+
+def compare_fixtures_val(fix,team1,team2,val):
+    comp = {key: {f'{team1}': fix[team1].get(key, val), f'{team2}': fix[team2].get(key, val)} for key in
+           sorted(set(list(fix[team1].keys()) + list(fix[team2].keys())))}
+    comp = dict(sorted(comp.items(), key=lambda t: t[0]))
+    return comp
+
+
+def prep_fixture_output(fix_name, fix_val, team1, team2, mgw, max_val):
+    # Filter fixtures
+    df_name = compare_fixtures_name(fix_name, team1, team2)
+    df_val = compare_fixtures_val(fix_val, team1, team2, max_val)
+
+    # Add leading 0 to mgw list
+    mgw_fix = [f'0{x}' if len(x) == 1 else x for x in mgw]
+
+    # Append MGW flag
+    for k, v in df_name.items():
+        k_update = k
+        if '_' in k:
+            k_update = k.rsplit('_', 1)[0]
+        if set([k_update]) <= set(mgw):
+            df_name[k]['MGW'] = True
+
+    # Append MGW flag
+    for k, v in df_val.items():
+        k_update = k
+        if '_' in k:
+            k_update = k.rsplit('_', 1)[0]
+        if set([k_update]) <= set(mgw_fix):
+            df_val[k]['MGW'] = True
+
+    min_val = {}
+    for k, v in df_val.items():
+        if v[team1] < v[team2]:
+            min_val[k] = team1
+        else:
+            min_val[k] = team2
+        if 'MGW' in df_val[k]:
+            k_update = k.rsplit('_', 1)[0]
+            stg = {k2: v for k2, v in df_val.items() if k_update in k2}
+            val_team1 = 0
+            for k3, v in stg.items():
+                val_team1 += v[team1]
+
+            val_team2 = 0
+            for k4, v in stg.items():
+                val_team2 += v[team2]
+
+            if val_team1 < val_team2:
+                min_val[k] = team1
+            else:
+                min_val[k] = team2
+
+    for k, v in df_name.items():
+        v['BEST_OPPONENT'] = v[min_val[k]]
+
+    for k in list(df_name):
+        for j in list(df_name[k]):
+            if j == 'MGW':
+                df_name[k].pop('MGW', None)
+
+    for k in list(df_val):
+        for j in list(df_val[k]):
+            if j == 'MGW':
+                df_val[k].pop('MGW', None)
+
+    df_name = pd.DataFrame.from_dict(df_name)
+    df_val = pd.DataFrame.from_dict(df_val)
+
+    return df_name, df_val
 
 
 # Calculate complementing fixtures
@@ -335,49 +408,91 @@ def complimenting_fixtures_calc(kpi, custom_kpi, start_gameweek, end_gameweek, e
     data, fixtures = load_data()
     fixtures_updated = update_fixture_information(data, fixtures, custom_kpi)
     fix, fix_name = reshape_fixtures(fixtures_updated, kpi)
-    fix, fix_name, bgw = blank_gameweek_calc(fix, fix_name)
+    fix, fix_name, bgw, max_val = blank_gameweek_calc(fix, fix_name)
 
-    fix_val = prep_fixture_output(fix)
-    fix_name = prep_fixture_output(fix_name)
 
-    mgw = multi_gw_id(fix)
-    fix = multi_gameweek_weight(fix)
-    fixture_pair = fixture_calc(fix, start_gameweek, end_gameweek, mgw, exclude_gameweeks, skip_multi_gameweeks,
+    fix_val = prep_fixture_output_all(copy.deepcopy(fix))
+    fix_name = prep_fixture_output_all(fix_name)
+
+    mgw = multi_gw_id(copy.deepcopy(fix))
+    fix = multi_gameweek_weight(copy.deepcopy(fix))
+    fixture_pair, all_fixture_vals = fixture_calc(copy.deepcopy(fix), start_gameweek, end_gameweek, mgw, exclude_gameweeks, skip_multi_gameweeks,
                                 skip_blank_gameweeks)
 
-    return fixture_pair, fix_val, fix_name
-#
-#
-# kpi = 'stength_overall'
-# skip_multi_gameweeks = False
-# skip_blank_gameweeks = False
-# start_gameweek = 20
-# end_gameweek = 35
-# exclude_gameweeks = []
-# # Exmaple custom KPI, goals scored last seasion (new teams given relgated teams values)
-# custom_kpi = {
-#     "ARS": 56,
-#     "AVL": 41,
-#     "BHA": 39,
-#     "BUR": 43,
-#     "CHE": 69,
-#     "CRY": 31,
-#     "EVE": 44,
-#     "FUL": 26,
-#     "LEE": 40,
-#     "LEI": 67,
-#     "LIV": 85,
-#     "MCI": 102,
-#     "MUN": 66,
-#     "NEW": 38,
-#     "SHU": 39,
-#     "SOU": 51,
-#     "TOT": 61,
-#     "WBA": 36,
-#     "WHU": 49,
-#     "WOL": 51
-# }
-#
-# complimenting_fixtures_calc(kpi, custom_kpi, start_gameweek, end_gameweek, exclude_gameweeks, skip_multi_gameweeks,
-#                             skip_blank_gameweeks)
+    return fixture_pair, fix_val, fix_name, mgw, bgw, max_val, all_fixture_vals
 
+
+def filter_fixtures(df, start_gameweek, end_gameweek, exclude_gameweeks, skip_multi_gameweeks,
+                    skip_blank_gameweeks, mgw, bgw):
+    # Add any missing gameweeks
+
+    all_gw = list(map(str, range(1, 39)))
+    for i in all_gw:
+        if len(i) == 1:
+            i = f'0{i}'
+        if i not in df.columns:
+            df[i] = ['-', '-', '-']
+    df = df.reindex(sorted(df.columns), axis=1)
+
+    cols = df.columns
+    col_renamed = []
+    for i in cols:
+        new_name = i.rsplit('_', 1)[0]
+        new_name = new_name.lstrip("0")
+        col_renamed.append(new_name)
+
+    df.columns = col_renamed
+
+    if skip_multi_gameweeks:
+        df = df.drop(mgw, axis=1, errors='ignore')
+
+    if skip_blank_gameweeks:
+        df = df.drop(bgw, axis=1, errors='ignore')
+
+    df = df.drop(exclude_gameweeks, axis=1, errors='ignore')
+
+    df = df[df.columns & list(map(str, range(start_gameweek, end_gameweek + 1)))]
+
+    return df
+
+
+def generate_hover_data(df):
+    hover_data = {}
+    for i in list(range(0, len(df.columns))):
+        opp = df.iloc[0, i]
+        if i != 0:
+            if df.columns[i] == df.columns[i - 1]:
+                opp_prv = df.iloc[0, i - 1]
+                opp = f'{opp_prv}, {opp}'
+                del hover_data[str(i - 1)]
+
+        hover_data[str(i)] = opp
+
+    team1 = list(hover_data.values())
+
+    for i in list(range(0, len(df.columns))):
+        opp = df.iloc[1, i]
+        if i != 0:
+            if df.columns[i] == df.columns[i - 1]:
+                opp_prv = df.iloc[0, i - 1]
+                opp = f'{opp_prv}, {opp}'
+                del hover_data[str(i - 1)]
+
+        hover_data[str(i)] = opp
+
+    team2 = list(hover_data.values())
+
+    return team1, team2
+
+
+def rename_columns(df):
+    cols = pd.Series(df.columns)
+
+    for dup in cols[cols.duplicated()].unique():
+        cols[cols[cols == dup].index.values.tolist()] = [dup + '.' + str(i) if i != 0 else dup for i in
+                                                         range(sum(cols == dup))]
+
+    # rename the columns with the cols list.
+    df.columns = cols
+
+    return df
