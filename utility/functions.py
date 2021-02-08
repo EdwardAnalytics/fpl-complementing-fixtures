@@ -12,7 +12,7 @@ def load_data():
     file_list = os.listdir("ff\\data\\bootstrap_static")
 
     # Sort and select first (latest) data set
-    file_list.sort()
+    file_list.sort(reverse=True)
     file_list = file_list[0]
 
     # Import data
@@ -25,7 +25,7 @@ def load_data():
     file_list = os.listdir("ff\\data\\fixtures")
 
     # Sort and select first (latest) data set
-    file_list.sort()
+    file_list.sort(reverse=True)
     file_list = file_list[0]
 
     # Import data
@@ -263,7 +263,7 @@ def multi_gameweek_weight(fix):
 
 
 # Reshape data to identify complimenting fixtures
-def fixture_calc(fix, start_gameweek, end_gameweek, mgw, exclude_gameweeks, skip_multi_gameweeks, skip_blank_gameweeks):
+def fixture_calc(fix, start_gameweek, end_gameweek, mgw, bgw, exclude_gameweeks, skip_multi_gameweeks, skip_blank_gameweeks):
     df = pd.DataFrame(fix)
     df = df.reindex(sorted(df.columns), axis=1)
     df.index = pd.to_numeric(df.index, errors='coerce')
@@ -278,7 +278,7 @@ def fixture_calc(fix, start_gameweek, end_gameweek, mgw, exclude_gameweeks, skip
         gameweeks.sort()
 
     if skip_blank_gameweeks:
-        gameweeks = list(set(gameweeks) - set(exclude_gameweeks))
+        gameweeks = list(set(gameweeks) - set(bgw))
         gameweeks.sort()
 
     # Remove specified gameweeks
@@ -416,7 +416,7 @@ def complimenting_fixtures_calc(kpi, custom_kpi, start_gameweek, end_gameweek, e
 
     mgw = multi_gw_id(copy.deepcopy(fix))
     fix = multi_gameweek_weight(copy.deepcopy(fix))
-    fixture_pair, all_fixture_vals = fixture_calc(copy.deepcopy(fix), start_gameweek, end_gameweek, mgw, exclude_gameweeks, skip_multi_gameweeks,
+    fixture_pair, all_fixture_vals = fixture_calc(copy.deepcopy(fix), start_gameweek, end_gameweek, mgw, bgw, exclude_gameweeks, skip_multi_gameweeks,
                                 skip_blank_gameweeks)
 
     return fixture_pair, fix_val, fix_name, mgw, bgw, max_val, all_fixture_vals
@@ -474,7 +474,7 @@ def generate_hover_data(df):
         opp = df.iloc[1, i]
         if i != 0:
             if df.columns[i] == df.columns[i - 1]:
-                opp_prv = df.iloc[0, i - 1]
+                opp_prv = df.iloc[1, i - 1]
                 opp = f'{opp_prv}, {opp}'
                 del hover_data[str(i - 1)]
 
