@@ -576,4 +576,4 @@ def generate_fixture_output(team1, team2, hidden_data):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=False)
