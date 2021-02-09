@@ -9,27 +9,27 @@ import numpy as np
 def load_data():
     # Bootstrap Static Data
     # List files in data direcory
-    file_list = os.listdir("ff\\data\\bootstrap_static")
+    file_list = os.listdir("data\\bootstrap_static")
 
     # Sort and select first (latest) data set
     file_list.sort(reverse=True)
     file_list = file_list[0]
 
     # Import data
-    path = f'ff\\data\\bootstrap_static\\{file_list}'
+    path = f'data\\bootstrap_static\\{file_list}'
     with open(path) as f:
         data = json.load(f)
 
     # Fixtures
     # List files in data direcory
-    file_list = os.listdir("ff\\data\\fixtures")
+    file_list = os.listdir("data\\fixtures")
 
     # Sort and select first (latest) data set
     file_list.sort(reverse=True)
     file_list = file_list[0]
 
     # Import data
-    path = f'ff\\data/fixtures/{file_list}'
+    path = f'data/fixtures/{file_list}'
     with open(path) as f:
         fixtures = json.load(f)
 

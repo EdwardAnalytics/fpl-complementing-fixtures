@@ -7,7 +7,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, ALL, State
 from dash.exceptions import PreventUpdate
-from ff.utility import functions
+from utility import functions
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
@@ -20,6 +20,7 @@ for i in range(1, 39):
 # Specify teams and load in data
 data, fixtures = functions.load_data()
 teams = functions.get_teams(data)
+
 
 teams_list = []
 for i in teams:
@@ -61,7 +62,7 @@ intro = html.Div(
                     html.P(
                         'If you have one player from each of two teams with complimenting fixtures you can rotate '
                         'each week with one starting and one one your bench, starting whoever has the easier fixture. '
-                        'This way you can potentially always have a position in your team always has an easy '
+                        'This way you can potentially WHO always have a position in your team always has an easy '
                         'opponent.'),
                     html.P(
                         "E.g. If you select a play from Southampton and Brighton for the first 15 gameweeks of the "
