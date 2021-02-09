@@ -25,6 +25,11 @@ Install requirements (in virtual environment):
 pip install -r requirements.txt
 ```
 
+Refresh the FPL data from the FPL API:
+```
+python refresh_data.py
+```
+
 Run the app:
 ```
 python app.py
