@@ -33,7 +33,7 @@ python app.py
 Navigate to local host: http://127.0.0.1:8050/.
 
 
-### Dashboard
+## Dashboard Preview
 ![](assets/dash.jpg)
 
 
