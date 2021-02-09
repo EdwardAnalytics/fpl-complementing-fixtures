@@ -11,7 +11,7 @@ from utility import functions
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
 
-# Specify gameweeks
+# Specify gameweeks for exclusion dropdown
 gw = []
 for i in range(1, 39):
     x = {'label': i, 'value': i}
@@ -28,7 +28,7 @@ for i in teams:
     teams_list.append(teams_stage)
 
 # Get current gameweek:
-current_gw = 37
+current_gw = 38
 for i in data['events']:
     if i['is_next']:
         current_gw = i['id']
@@ -36,6 +36,8 @@ for i in data['events']:
 end_gw = 35
 if current_gw >= 35:
     end_gw = 38
+if current_gw < 10:
+    end_gw = 18
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 
@@ -62,20 +64,22 @@ intro = html.Div(
                     html.P(
                         'If you have one player from each of two teams with complementing fixtures you can rotate '
                         'each week with one starting and one one your bench, starting whoever has the easier fixture. '
-                        'This way you can potentially WHO always have a position in your team always has an easy '
+                        'This way you can potentially always have a position in your team who has an easy '
                         'opponent.'),
                     html.P(
-                        "E.g. If you select a play from Southampton and Brighton for the first 15 gameweeks of the "
+                        "E.g. If you selected a player from Southampton and Brighton for the first 15 gameweeks of the "
                         "20/21 season, by rotating these players their opponents' would be: CRY, NEW, BUR, WBA, CRY, "
                         "WBA, AVL, NEW, AVL, MUN, BHA, SHU, FUL, SHU and FUL."),
                     html.Br(),
-                    html.H6('Tips'),
+                    html.H6('Tips and Notes'),
                     html.P(
                         'If you still have your wildcard, only look up to gameweek 19 for the first half of the '
                         'season, and a few weeks off gameweek 38 if in the second half.'),
                     html.P(
                         'If know when you are using your freehit, exclude that specific game week from the calculation.'),
-                    html.Br(),
+                    html.P(
+                        'The value for multigameweeks is the average value for the team\'s opponent, divided by the '
+                        'number of games the team has that week.'),
                     html.P(children=[
                         html.A(href='https://github.com/edwer-listl/ff-complementing-fixtures',
                                children='Link to GitHub repo.')
@@ -435,11 +439,9 @@ def generate_table(kpi_selected, mgw_bgw, exclude_specific_gws, slider_vals, cus
 def select_column_row(table_limit, team_filter, hidden_data):
     # but did we even click on anything??
     if dash.callback_context.triggered[0]['prop_id'] == '.':
-        print('preventing update')
         raise PreventUpdate
     df = pd.read_json(hidden_data['fixtures_pair'])
 
-    print(team_filter)
     if team_filter is None:
         df = df.head(table_limit)
 
@@ -469,7 +471,6 @@ def select_column_row(table_limit, team_filter, hidden_data):
 def generate_fixture_output(team1, team2, hidden_data):
     # but did we even click on anything??
     if dash.callback_context.triggered[0]['prop_id'] == '.':
-        print('preventing update')
         raise PreventUpdate
 
     kpi_selected = hidden_data['kpi_selected']
