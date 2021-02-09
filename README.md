@@ -39,6 +39,6 @@ Navigate to local host: http://127.0.0.1:8050/.
 
 
 ## Dashboard Preview
-![](assets/dash-bha-sou.jpg)
+![](assets/bha-sou-dash.jpg)
 
 
