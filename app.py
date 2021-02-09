@@ -42,7 +42,7 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 intro = html.Div(
     [
         dbc.Row([
-            dbc.Col(html.H2(children=["FPL Tool | Complimenting Fixtures"])),
+            dbc.Col(html.H2(children=["FPL Tool | Complementing Fixtures"])),
             dbc.Col(children=[
                 html.Div(children=[html.Img(src='assets/pwt.png', style={'max-height': '100%'})]
                          , style={'height': '50px', 'overflow': 'hidden', 'text-align': 'right'}
@@ -53,14 +53,14 @@ intro = html.Div(
         dbc.Row(
             [
                 dbc.Col(className='ml-3', children=[
-                    html.H6('Definition of “complimenting fixtures”'),
+                    html.H6('Definition of “complementing fixtures”'),
                     html.P(
-                        'If two teams have complimenting fixtures: this means when one has a difficult opponent, '
+                        'If two teams have complementing fixtures: this means when one has a difficult opponent, '
                         'the other has an easy opponent.'),
                     html.Br(),
                     html.H6('Example Application'),
                     html.P(
-                        'If you have one player from each of two teams with complimenting fixtures you can rotate '
+                        'If you have one player from each of two teams with complementing fixtures you can rotate '
                         'each week with one starting and one one your bench, starting whoever has the easier fixture. '
                         'This way you can potentially WHO always have a position in your team always has an easy '
                         'opponent.'),
