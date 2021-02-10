@@ -44,8 +44,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 intro = html.Div(
     [
         dbc.Row([
-            dbc.Col(html.H2(children=["FPL Tool | Complementing Fixtures"])),
-            dbc.Col(children=[
+            dbc.Col(width = 10, children = [html.H3(children=["FPL Tool | Complementing Fixtures"])]),
+            dbc.Col(width = 2, children=[
                 html.Div(children=[html.Img(src='assets/pwt.png', style={'max-height': '100%'})]
                          , style={'height': '50px', 'overflow': 'hidden', 'text-align': 'right'}
                          )
