@@ -184,11 +184,10 @@ exclusions = html.Div(
 
 output = html.Div(children=[
     dbc.Row(children=[
-        dbc.Col(width=3, children=[
+        dbc.Col(width=11, children=[
             html.H4('Team Pairs Ordered')
         ]),
-        dbc.Col(width={'size': 1,
-                       'offset': 8},
+        dbc.Col(
                 children=[
                     dcc.Loading(
                         type="circle",
@@ -237,11 +236,10 @@ output = html.Div(children=[
 
 compare_fixtures = html.Div(children=[
     dbc.Row(children=[
-        dbc.Col(width=5, children=[
+        dbc.Col(width=11, children=[
             html.H4("Compare Two Teams' Fixtures")
         ]),
-        dbc.Col(width={'size': 1,
-                       'offset': 6},
+        dbc.Col(
                 children=[
                     dcc.Loading(
                         type="circle",
@@ -275,7 +273,7 @@ compare_fixtures = html.Div(children=[
         ])
     ]),
     dbc.Row(children=[
-        dbc.Col(children=[
+        dbc.Col(width=12, children=[
             dcc.Loading(
                 type="circle",
                 className='pt-3',
@@ -496,7 +494,7 @@ def generate_fixture_output(team1, team2, hidden_data):
     fix_name_disct_cols = functions.rename_columns(fix_name.copy())
 
     # Add index as first column with no column title
-    col1 = [team1, team2, 'Best']
+    col1 = [team1, team2, 'BEST','SELECT']
     fix_name_disct_cols.insert(0, '', col1)
 
     # Populate graph
@@ -505,10 +503,10 @@ def generate_fixture_output(team1, team2, hidden_data):
     # Add fixtures as hover data
     team1_hd, team2_hd = functions.generate_hover_data(fix_name.copy())
 
-    if team1 == 'MUN':
-        team1_hd = [x.replace('TOT', "Lads it's TOT") for x in team1_hd]
-    if team2 == 'MUN':
-        team2_hd = [x.replace('TOT', "Lads it's TOT") for x in team2_hd]
+    team1_hd = [x.replace('TOT', "Lads it's TOT") for x in team1_hd]
+    team2_hd = [x.replace('TOT', "Lads it's TOT") for x in team2_hd]
+    team1_hd = [x.replace('BUR', "That's the BUR way") for x in team1_hd]
+    team2_hd = [x.replace('BUR', "That's the BUR way") for x in team2_hd]
 
     if team1 == 'BHA':
         team1_hd = [x.replace('CRY', "CRY - UTA!") for x in team1_hd]
@@ -519,6 +517,7 @@ def generate_fixture_output(team1, team2, hidden_data):
         team1_hd = [x.replace('BHA', "BHA - UTA!") for x in team1_hd]
     if team2 == 'CRY':
         team2_hd = [x.replace('BHA', "BHA - UTA!") for x in team2_hd]
+
 
     graph_data['team1_hd'] = team1_hd
     graph_data['team2_hd'] = team2_hd
@@ -564,11 +563,15 @@ def generate_fixture_output(team1, team2, hidden_data):
             {
                 'if': {'row_index': 2},
                 'fontWeight': 'bold'
-            }],
+            },
+            {
+                'if': {'row_index': 3},
+                'fontWeight': 'bold'
+            }
+        ],
         style_cell={
             'overflow': 'hidden',
             'textOverflow': 'ellipsis',
-            'maxWidth': 0,
             'textAlign': 'center'
         }
 

@@ -385,6 +385,7 @@ def prep_fixture_output(fix_name, fix_val, team1, team2, mgw, max_val):
 
     for k, v in df_name.items():
         v['BEST_OPPONENT'] = v[min_val[k]]
+        v['TEAM_TO_SELECT'] = min_val[k]
 
     for k in list(df_name):
         for j in list(df_name[k]):
