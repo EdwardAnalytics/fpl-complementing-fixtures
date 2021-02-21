@@ -5,7 +5,7 @@ from datetime import datetime
 # Get current date to timestamp data
 date = datetime.today().strftime("%Y%m%d")
 
-### Bootstrap-static
+# Bootstrap-static
 # Load JSON
 url = 'https://fantasy.premierleague.com/api/bootstrap-static/'
 data = requests.get(url)
@@ -16,7 +16,7 @@ path = f'data/bootstrap_static/bootstrap_static_{date}.json'
 with open(path, 'w') as f:
     json.dump(data, f)
 
-### Fixtures
+# Fixtures
 # Load JSON
 url = 'https://fantasy.premierleague.com/api/fixtures/'
 data = requests.get(url)
