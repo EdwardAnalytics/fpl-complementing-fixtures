@@ -21,7 +21,6 @@ for i in range(1, 39):
 data, fixtures = functions.load_data()
 teams = functions.get_teams(data)
 
-
 teams_list = []
 for i in teams:
     teams_stage = {'label': i, 'value': i}
@@ -44,8 +43,8 @@ app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 intro = html.Div(
     [
         dbc.Row([
-            dbc.Col(width = 10, children = [html.H3(children=["FPL Tool | Complementing Fixtures"])]),
-            dbc.Col(width = 2, children=[
+            dbc.Col(width=10, children=[html.H3(children=["FPL Tool | Complementing Fixtures"])]),
+            dbc.Col(width=2, children=[
                 html.Div(children=[html.Img(src='assets/pwt.png', style={'max-height': '100%'})]
                          , style={'height': '50px', 'overflow': 'hidden', 'text-align': 'right'}
                          )
@@ -70,6 +69,10 @@ intro = html.Div(
                         "E.g. If you selected a player from Southampton and Brighton for the first 15 gameweeks of the "
                         "20/21 season, by rotating these players their opponents' would be: CRY, NEW, BUR, WBA, CRY, "
                         "WBA, AVL, NEW, AVL, MUN, BHA, SHU, FUL, SHU and FUL."),
+                    html.P(
+                        "You may decide that you want to have the Man City keeper. This tool can help you identify a "
+                        "cheap keeper to bring in to play when Man City are playing a strong opponent such as "
+                        "Liverpool or Man United."),
                     html.Br(),
                     html.H6('Tips and Notes'),
                     html.P(
@@ -188,18 +191,18 @@ output = html.Div(children=[
             html.H4('Team Pairs Ordered')
         ]),
         dbc.Col(
-                children=[
-                    dcc.Loading(
-                        type="circle",
-                        className='pt-5',
-                        children=[
-                            html.P(id='loading-spinner',
-                                   children=[''
-                                             ]
-                                   )
-                        ]
-                    )
-                ])
+            children=[
+                dcc.Loading(
+                    type="circle",
+                    className='pt-5',
+                    children=[
+                        html.P(id='loading-spinner',
+                               children=[''
+                                         ]
+                               )
+                    ]
+                )
+            ])
     ]),
 
     dbc.Row(children=[
@@ -240,18 +243,18 @@ compare_fixtures = html.Div(children=[
             html.H4("Compare Two Teams' Fixtures")
         ]),
         dbc.Col(
-                children=[
-                    dcc.Loading(
-                        type="circle",
-                        className='pt-5',
-                        children=[
-                            html.P(id='loading-spinner-comp',
-                                   children=[''
-                                             ]
-                                   )
-                        ]
-                    )
-                ])
+            children=[
+                dcc.Loading(
+                    type="circle",
+                    className='pt-5',
+                    children=[
+                        html.P(id='loading-spinner-comp',
+                               children=[''
+                                         ]
+                               )
+                    ]
+                )
+            ])
 
     ]),
 
@@ -494,7 +497,9 @@ def generate_fixture_output(team1, team2, hidden_data):
     fix_name_disct_cols = functions.rename_columns(fix_name.copy())
 
     # Add index as first column with no column title
-    col1 = [team1, team2, 'BEST','SELECT']
+    col1 = [team1, team2, 'BEST']
+    # ,'SELECT']
+
     fix_name_disct_cols.insert(0, '', col1)
 
     # Populate graph
@@ -517,7 +522,6 @@ def generate_fixture_output(team1, team2, hidden_data):
         team1_hd = [x.replace('BHA', "BHA - UTA!") for x in team1_hd]
     if team2 == 'CRY':
         team2_hd = [x.replace('BHA', "BHA - UTA!") for x in team2_hd]
-
 
     graph_data['team1_hd'] = team1_hd
     graph_data['team2_hd'] = team2_hd
@@ -563,11 +567,12 @@ def generate_fixture_output(team1, team2, hidden_data):
             {
                 'if': {'row_index': 2},
                 'fontWeight': 'bold'
-            },
-            {
-                'if': {'row_index': 3},
-                'fontWeight': 'bold'
             }
+            # ,
+            # {
+            #     'if': {'row_index': 3},
+            #     'fontWeight': 'bold'
+            # }
         ],
         style_cell={
             'overflow': 'hidden',
