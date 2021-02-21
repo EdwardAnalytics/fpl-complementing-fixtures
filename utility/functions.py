@@ -35,6 +35,7 @@ def load_data():
 
     return data, fixtures
 
+
 # Get team short names
 def get_teams(data):
     teams = []
@@ -89,13 +90,13 @@ def update_fixture_information(data, fixtures, custom_kpi):
 
         # Add strength attack
         kpi_key = 'strength_attack_away'
-        kpi_name = 'team_h_stength_attack'  # Note we are defining "h" here as this this will be the stats for the opponant
+        kpi_name = 'team_h_strength_attack'  # Note we are defining "h" here as this this will be the stats for the opponant
         kpi_value = name_lookup[team_a_id][kpi_key]
         i[kpi_name] = kpi_value
 
         # Add strength overall
         kpi_key = 'strength_overall_away'
-        kpi_name = 'team_h_stength_overall'  # Note we are defining "h" here as this this will be the stats for the opponant
+        kpi_name = 'team_h_strength_overall'  # Note we are defining "h" here as this this will be the stats for the opponant
         kpi_value = name_lookup[team_a_id][kpi_key]
         i[kpi_name] = kpi_value
 
@@ -114,13 +115,13 @@ def update_fixture_information(data, fixtures, custom_kpi):
 
         # Add strength attack
         kpi_key = 'strength_attack_home'
-        kpi_name = 'team_a_stength_attack'  # Note we are defining "h" here as this this will be the stats for the opponant
+        kpi_name = 'team_a_strength_attack'  # Note we are defining "h" here as this this will be the stats for the opponant
         kpi_value = name_lookup[team_h_id][kpi_key]
         i[kpi_name] = kpi_value
 
         # Add strength overall
         kpi_key = 'strength_overall_home'
-        kpi_name = 'team_a_stength_overall'  # Note we are defining "h" here as this this will be the stats for the opponant
+        kpi_name = 'team_a_strength_overall'  # Note we are defining "h" here as this this will be the stats for the opponant
         kpi_value = name_lookup[team_h_id][kpi_key]
         i[kpi_name] = kpi_value
 
@@ -184,7 +185,7 @@ def reshape_fixtures(fixtures, kpi):
     return fix, fix_name
 
 
-def blank_gameweek_calc(fix,fix_name):
+def blank_gameweek_calc(fix, fix_name):
     # Identify max value for kpi
     max_val = 0
     for i in fix:
@@ -263,7 +264,8 @@ def multi_gameweek_weight(fix):
 
 
 # Reshape data to identify complimenting fixtures
-def fixture_calc(fix, start_gameweek, end_gameweek, mgw, bgw, exclude_gameweeks, skip_multi_gameweeks, skip_blank_gameweeks):
+def fixture_calc(fix, start_gameweek, end_gameweek, mgw, bgw, exclude_gameweeks, skip_multi_gameweeks,
+                 skip_blank_gameweeks):
     df = pd.DataFrame(fix)
     df = df.reindex(sorted(df.columns), axis=1)
     df.index = pd.to_numeric(df.index, errors='coerce')
@@ -323,16 +325,16 @@ def prep_fixture_output_all(fix):
     return fix
 
 
-def compare_fixtures_name(fix,team1,team2):
+def compare_fixtures_name(fix, team1, team2):
     comp = {key: {f'{team1}': fix[team1].get(key, '-'), f'{team2}': fix[team2].get(key, '-')} for key in
-           sorted(set(list(fix[team1].keys()) + list(fix[team2].keys())))}
+            sorted(set(list(fix[team1].keys()) + list(fix[team2].keys())))}
     comp = dict(sorted(comp.items(), key=lambda t: t[0]))
     return comp
 
 
-def compare_fixtures_val(fix,team1,team2,val):
+def compare_fixtures_val(fix, team1, team2, val):
     comp = {key: {f'{team1}': fix[team1].get(key, val), f'{team2}': fix[team2].get(key, val)} for key in
-           sorted(set(list(fix[team1].keys()) + list(fix[team2].keys())))}
+            sorted(set(list(fix[team1].keys()) + list(fix[team2].keys())))}
     comp = dict(sorted(comp.items(), key=lambda t: t[0]))
     return comp
 
@@ -385,7 +387,7 @@ def prep_fixture_output(fix_name, fix_val, team1, team2, mgw, max_val):
 
     for k, v in df_name.items():
         v['BEST_OPPONENT'] = v[min_val[k]]
-        #v['TEAM_TO_SELECT'] = min_val[k]
+        # v['TEAM_TO_SELECT'] = min_val[k]
 
     for k in list(df_name):
         for j in list(df_name[k]):
@@ -411,14 +413,14 @@ def complimenting_fixtures_calc(kpi, custom_kpi, start_gameweek, end_gameweek, e
     fix, fix_name = reshape_fixtures(fixtures_updated, kpi)
     fix, fix_name, bgw, max_val = blank_gameweek_calc(fix, fix_name)
 
-
     fix_val = prep_fixture_output_all(copy.deepcopy(fix))
     fix_name = prep_fixture_output_all(fix_name)
 
     mgw = multi_gw_id(copy.deepcopy(fix))
     fix = multi_gameweek_weight(copy.deepcopy(fix))
-    fixture_pair, all_fixture_vals = fixture_calc(copy.deepcopy(fix), start_gameweek, end_gameweek, mgw, bgw, exclude_gameweeks, skip_multi_gameweeks,
-                                skip_blank_gameweeks)
+    fixture_pair, all_fixture_vals = fixture_calc(copy.deepcopy(fix), start_gameweek, end_gameweek, mgw, bgw,
+                                                  exclude_gameweeks, skip_multi_gameweeks,
+                                                  skip_blank_gameweeks)
 
     return fixture_pair, fix_val, fix_name, mgw, bgw, max_val, all_fixture_vals
 

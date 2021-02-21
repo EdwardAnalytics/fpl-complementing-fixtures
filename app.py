@@ -110,8 +110,8 @@ select_inputs = html.Div(children=[
                 id='kpi-select',
                 options=[
                     {'label': 'Difficulty ', 'value': 'difficulty'},
-                    {'label': 'Strength Attack', 'value': 'stength_attack'},
-                    {'label': 'Strength Overall', 'value': 'stength_overall'},
+                    {'label': 'Strength Attack', 'value': 'strength_attack'},
+                    {'label': 'Strength Overall', 'value': 'strength_overall'},
                     {'label': 'Custom', 'value': 'custom_kpi'}
                 ],
                 value='difficulty',
