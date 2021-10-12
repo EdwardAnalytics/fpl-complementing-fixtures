@@ -10,7 +10,7 @@ E.g. If you select a play from Southampton and Brighton for the first 15 gamewee
 
 
 ### Hosted Dashboard Location
-http://fftool.ddns.net/
+https://fpltool.farragher.uk/
 
 
 ### Local Instructions
