@@ -16,7 +16,7 @@ https://fpltool.farragher.uk/
 ### Local Instructions
 Clone this repo:
 ```
-git clone https://github.com/edwer-listl/ff-complementing-fixtures.git
+git clone https://github.com/edward-farragher/ff-complementing-fixtures.git
 cd ff-complementing-fixtures
 ```
 
