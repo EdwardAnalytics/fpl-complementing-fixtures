@@ -10,7 +10,7 @@ E.g. If you select a play from Southampton and Brighton for the first 15 gamewee
 
 
 ### Hosted Dashboard Location
-http://fftool.ddns.net/
+https://fpltool.farragher.uk/
 
 
 ### Local Instructions
@@ -18,7 +18,7 @@ Python Version: 3.11.7
 
 Clone this repo:
 ```
-git clone https://github.com/edwer-listl/ff-complementing-fixtures.git
+git clone https://github.com/edward-farragher/ff-complementing-fixtures.git
 cd ff-complementing-fixtures
 ```
 
