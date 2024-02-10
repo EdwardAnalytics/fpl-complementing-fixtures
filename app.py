@@ -1,4 +1,5 @@
 import dash
+import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc  # pip install dash-bootstrap-components
@@ -6,7 +7,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, ALL, State
 from dash.exceptions import PreventUpdate
-from dash import dash_table
 from utility import functions
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]
@@ -486,6 +486,8 @@ def generate_fixture_output(team1, team2, hidden_data):
     end_gameweek = hidden_data['end_gameweek']
     exclude_gameweeks = hidden_data['exclude_gameweeks']
     all_fixture_vals = pd.read_json(hidden_data['all_fixture_vals'])
+
+    print(kpi_selected)
 
     fix_name, fix_val = functions.prep_fixture_output(fix_name, fix_val, team1, team2, mgw, max_val)
 
