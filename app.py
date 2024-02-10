@@ -1,5 +1,4 @@
 import dash
-import dash_table
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc  # pip install dash-bootstrap-components
@@ -7,6 +6,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, ALL, State
 from dash.exceptions import PreventUpdate
+from dash import dash_table
 from utility import functions
 
 external_stylesheets = [dbc.themes.BOOTSTRAP]

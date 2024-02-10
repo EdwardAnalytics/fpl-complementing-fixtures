@@ -14,6 +14,8 @@ http://fftool.ddns.net/
 
 
 ### Local Instructions
+Python Version: 3.11.7
+
 Clone this repo:
 ```
 git clone https://github.com/edwer-listl/ff-complementing-fixtures.git
@@ -40,5 +42,3 @@ Navigate to local host: http://127.0.0.1:8050/.
 
 ## Dashboard Preview
 ![](assets/bha-sou-dash.jpg)
-
-
