@@ -84,7 +84,7 @@ intro = html.Div(
                         'The value for multigameweeks is the average value for the team\'s opponent, divided by the '
                         'number of games the team has that week.'),
                     html.P(children=[
-                        html.A(href='https://github.com/edwer-listl/ff-complementing-fixtures',
+                        html.A(href='https://github.com/edwer-listl/fpl-complementing-fixtures',
                                children='Link to GitHub repo.')
                     ]),
                     # html.P(children = [
