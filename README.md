@@ -16,16 +16,7 @@ https://fpltool.farragher.uk/
 ### Local Instructions
 Python Version: 3.11.7
 
-Clone this repo:
-```
-git clone https://github.com/edward-farragher/fpl-complementing-fixtures.git
-cd ff-complementing-fixtures
-```
-
-Install requirements (in virtual environment):
-```
-pip install -r requirements.txt
-```
+Clone this repo and Install requirements (in virtual environment).
 
 Refresh the FPL data from the FPL API:
 ```
